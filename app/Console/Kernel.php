@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
         // $schedule->call('App\Http\Controllers\UserRetentionController@apiMember')->dailyAt('01:00');
         // $schedule->call('App\Http\Controllers\UserRetentionController@apiTransaksi')->dailyAt('01:05');
         $schedule->call('App\Http\Controllers\ApiWaController@data_api_wa_cek')->everyThirtyMinutes();
+        $schedule->call('App\Http\Controllers\ApiWaController@training_api')->hourlyAt(17);
         // $schedule->call(function () {
         //     DB::table('was')->where('telpon','082141300812')->delete();
         // })->everyMinute();

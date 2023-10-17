@@ -10,6 +10,8 @@ use App\Models\contact;
 use App\Models\sending;
 use App\Models\MobileAgent;
 use App\Models\Visit;
+use App\Models\Tipe_send;
+use App\Models\Inbox;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -40,13 +42,25 @@ class HomeController extends Controller
 
     public function sender()
     {
-        $data=contact::all();
-        // print_r($data);
-        // die();
-        return view('menu.sender', compact('data'))->with([
+        return view('menu.sender')->with([
             'tMulai'    => date('Y-m-01'),
             'tAkhir'    => date('Y-m-d'),
             'tmulaiNewuser' => date('Y-m'),
+            'contact' => contact::all(),
+            'tipe_send' => Tipe_send::all(),
+            'tipe_send_umum' => $this->tipeid_umum,
+        ]);
+    }
+
+    public function file()
+    {
+        return view('menu.file')->with([
+            'tMulai'    => date('Y-m-01'),
+            'tAkhir'    => date('Y-m-d'),
+            'tmulaiNewuser' => date('Y-m'),
+            'contact' => contact::all(),
+            'tipe_send' => Tipe_send::all(),
+            'tipe_send_umum' => $this->tipeid_umum,
         ]);
     }
 
@@ -57,6 +71,8 @@ class HomeController extends Controller
             'tMulai'    => date('Y-m-01'),
             'tAkhir'    => date('Y-m-d'),
             'tmulaiNewuser' => date('Y-m'),
+            'tipe_send' => Tipe_send::all(),
+            'tipe_send_umum' => $this->tipeid_umum,
         ]);
     }
 
@@ -69,22 +85,46 @@ class HomeController extends Controller
         ]);
     }
 
-    public function api_wa()
+    public function tipe()
     {
-        return view('menu.api_wa')->with([
+        return view('menu.tipe')->with([
             'tMulai'    => date('Y-m-01'),
             'tAkhir'    => date('Y-m-d'),
             'tmulaiNewuser' => date('Y-m'),
         ]);
     }
 
-    public function history()
+    public function api_wa()
     {
-         $data=api_was::all();
-        return view('menu.history', compact('data'))->with([
+        return view('menu.api_wa')->with([
             'tMulai'    => date('Y-m-01'),
             'tAkhir'    => date('Y-m-d'),
             'tmulaiNewuser' => date('Y-m'),
+            'tipe_send' => Tipe_send::all(),
+            'tipe_send_umum' => $this->tipeid_umum,
+        ]);
+    }
+
+    public function history()
+    {
+        return view('menu.history')->with([
+            'tMulai'    => date('Y-m-01'),
+            'tAkhir'    => date('Y-m-d'),
+            'tmulaiNewuser' => date('Y-m'),
+            'data_api' => api_was::all(),
+            'data_tipe' => Tipe_send::all(),
+        ]);
+    }
+
+    public function inbox()
+    {
+        return view('menu.inbox')->with([
+            'tMulai'    => date('Y-m-01'),
+            'tAkhir'    => date('Y-m-d'),
+            'tmulaiNewuser' => date('Y-m'),
+            'data_api' => api_was::all(),
+            'data_tipe' => Tipe_send::all(),
+            'data_jenis' => Inbox::groupBy('jenis')->get(),
         ]);
     }
 
