@@ -28,9 +28,9 @@ $title_web='Api WA'
 
 
 
+            <div class="table-responsive">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <a class="btn btn-primary" href="javascript:;" data-toggle="modal" data-target="#formApi" style="margin-bottom:30px;">
+                        <a class="btn btn-primary" href="javascript:;" onclick="tambah()" data-toggle="modal" data-target="#formApi" style="margin-bottom:30px;">
                             Tambah Data
                         </a>
                         <button id="cek_status" class="btn btn-primary" href="javascript:;" style="margin-bottom:30px;">
@@ -49,6 +49,8 @@ $title_web='Api WA'
                             <thead>
                                 <tr>
                                     <th class="text-center">Url</th>
+                                    <th class="text-center">Nomor</th>
+                                    <th class="text-center">Tipe</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center"> </th>
                                 </tr>
@@ -69,10 +71,53 @@ $title_web='Api WA'
                 <h4 class="modal-title">Form API</h4>
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
+            <div class="alert" role="alert"></div>
             <div class="modal-body">                    
                 <div class="form-group col-xs-12 col-lg-12">
                     <label class="control-label">Url</label>
-                    {{ Form::text('url', null, ['class' => 'form-control']) }}
+                    {{-- {{ Form::text('url', null, ['class' => 'form-control']) }} --}}
+                    <input type='text' id="url" class="form-control" >
+                    <br>
+                    <label class="control-label">Nomor</label>
+                    <input type='text' id="nomor" class="form-control" >
+                    <br>
+                    <label class="control-label">Tipe</label>
+                    <select id="tipe" class="form-control" required>
+                        <option value="" >Pilih tipe</option>
+                        @foreach($tipe_send as $data)
+                            <option value="{{$data->id}}" >{{$data->nama}}</option>
+                        @endforeach
+                    </select> 
+                    <br>
+                    <label class="control-label">Jenis</label>
+                    <select id="jenis" class="form-control" required>
+                        <option value="single" >Single</option>
+                        <option value="multiple" >Multiple</option>
+                    </select> 
+                    <br>
+                    <label class="control-label">Aktif</label>
+                    <select id="status" class="form-control" required>
+                        <option value="1" >Iya</option>
+                        <option value="0" >Tidak</option>
+                    </select> 
+                    <br>
+                    <label class="control-label">Nomor Baru</label>
+                    <select id="baru" class="form-control" required>
+                        <option value="y" >Iya</option>
+                        <option value="n" >Tidak</option>
+                    </select> 
+                    <br>
+                    <label class="control-label">Training</label>
+                    <select id="training" class="form-control" required>
+                        <option value="y" >Iya</option>
+                        <option value="n" >Tidak</option>
+                    </select> 
+                    <br>
+                    <label class="control-label">Cronjob</label>
+                    <select id="cron" class="form-control" required>
+                        <option value="y" >Iya</option>
+                        <option value="n" >Tidak</option>
+                    </select> 
                 </div>
             </div>
             <div class="modal-footer">
@@ -115,37 +160,23 @@ $title_web='Api WA'
             }else{
             var url="{{ url('/data_api_wa') }}";
             }
-            // url=url+'/'+$('[name=search]').val();   
-            // console.log(url);         
         $.ajax({
             type : 'get',
             url : url,
             success : function(data){  
-                // $('tbody').html('');
-                // myTable.row.add({}).draw();    
                 myTable.clear().draw();          
                 $(data).each(function(x,y){
                     var status='';
                     if(y.status==1){status='<center><i class="fa-solid fa-check"></i></center>'}
                     else{status='<center><i class="fa-solid fa-xmark"></i></center>'}
-                    // result = 
-                    // '<tr>'
-                    //     + '<td>'+y.url+'</td>'
-                    //     + '<td>'+status+'</td>'
-                    //     + '<td>'
-                    //         + '<a href="javascript:;" style="padding-right: 10px;" onclick="editPegawai('+y.id+')"><i class="fas fa-edit"></i> Edit</a> | '
-                    //         + '<a href="javascript:;" onclick="destroyPegawai(this.parentNode.parentNode, '+y.id+')"> <i class="fas fa-trash-alt"></i> Hapus</a>'
-                    //     + '</td>'
-                    // + '</tr>';
-                    // $('tbody').append(result);
                     result.push(y.url);
+                    result.push(y.nomor);
+                    result.push(y.nama);
                     result.push(status);
-                    result.push('<a href="javascript:;" style="padding-right: 10px;" onclick="editPegawai('+y.id+')"><i class="fas fa-edit"></i> Edit</a> | <a href="javascript:;" onclick="destroyPegawai(this.parentNode.parentNode, '+y.id+')"> <i class="fas fa-trash-alt"></i> Hapus</a>');
+                    result.push('<a href="javascript:;" style="padding-right: 10px;" onclick="editApi('+y.id+','+y.id_tipe+')"><i class="fas fa-edit"></i> Edit</a> | <a href="javascript:;" onclick="hapusApi(this.parentNode.parentNode, '+y.id+')"> <i class="fas fa-trash-alt"></i> Hapus</a>');
                     myTable.row.add(result).draw();
-                    // console.log(result);
                     result.length = 0;
 
-                    // $( "#cek_status" ).innerHTML =y.updated_at;
                     var today = new Date(y.updated_at);
 
                     const month = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
@@ -164,9 +195,9 @@ $title_web='Api WA'
         });
     }
 
-    setInterval(function() {
-        getIndex();
-    },1000);
+    // setInterval(function() {
+    //     getIndex();
+    // },1000);
 
     // $("#search").change(function() {
     //     getIndex();
@@ -178,9 +209,6 @@ $title_web='Api WA'
         var result;
 
         if( idEdit != 0 ){
-            // var link="{{ url('/edit_aksi_contact') }}";
-            // var link2='/'+idEdit;
-            // var link_all=link+link2;
             url = "{{ url('/edit_aksi_api_wa') }}";
             type = 'post';
         }else{
@@ -188,24 +216,50 @@ $title_web='Api WA'
             type = 'post';
         }
 
-        $.ajax({
-            type : type,
-            url : url,
-            data : {
-                idedit : idEdit,
-                url : $('[name=url]').val(),
-            },
-            success : function(data){   
-                idEdit = 0;   
-                $('[name=url]').val('');
-                getIndex();
-                jQuery.noConflict();
-                $('#formApi').modal('hide');
-            },
-        });
+        // if(!($('#url').val()).includes('send-message')){
+        if(!($('#url').val()).includes('http')){
+            $('.alert').addClass('alert-danger').html('url tidak valid');
+        }else{
+            $.ajax({
+                type : type,
+                url : url,
+                data : {
+                    idedit : idEdit,
+                    url : $('#url').val(),
+                    tipe : $('#tipe').val(),
+                    baru : $('#baru').val(),
+                    training : $('#training').val(),
+                    cron : $('#cron').val(),
+                    nomor : $('#nomor').val(),
+                    status : $('#status').val(),
+                    jenis : $('#jenis').val(),
+                },
+                success : function(data){   
+                    idEdit = 0;   
+                    $('#url').val('');
+                    $('#tipe').val('');
+                    getIndex();
+                    jQuery.noConflict();
+                    $('#formApi').modal('hide');
+                },
+            });
+        }
     }
 
-    function editPegawai(id){    
+    function tambah() {
+        $('#url').val('');
+        $('#tipe').val('');   
+        $('#baru').val('y');   
+        $('#training').val('y');   
+        $('#cron').val('y');   
+        $('#status').val('1');   
+        $('#jenis').val('multiple');   
+        $('.alert').removeClass('alert-danger');
+        $('.alert').html('');
+    }
+
+    function editApi(id,id_tipe){   
+        // console.log(id_tipe); 
         var link="{{ url('/edit_api_wa') }}";
         var link2='/'+id;
         var link_all=link+link2;    
@@ -216,12 +270,19 @@ $title_web='Api WA'
                 idEdit = data.id; 
                 jQuery.noConflict();               
                 $('#formApi').modal('show');
-                $('[name=url]').val(data.url);                             
+                $('#url').val(data.url);
+                $('#tipe').val(id_tipe);                             
+                $('#baru').val(data.baru);                             
+                $('#training').val(data.training);                             
+                $('#cron').val(data.cronjob);                             
+                $('#nomor').val(data.nomor);                             
+                $('#status').val(data.status);                             
+                $('#jenis').val(data.jenis);                             
             },
         });
     }
-
-    function destroyPegawai(element, id){    
+    
+    function hapusApi(element, id){    
         var link="{{ url('/delete_api_wa') }}";
         var link2='/'+id;
         var link_all=link+link2;
@@ -248,53 +309,6 @@ $title_web='Api WA'
 {{-- end navigasi --}}
 
 
-
-<input type="hidden" name="page1">
-<input type="hidden" name="page2">
-<input type="hidden" name="page3">
-<input type="hidden" name="page4">
-<input type="hidden" name="page5">
-
 @endsection
 
-@section('my-script')
-{{-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgTb1CFpkhDxfrNFKLP9bwGErvC1VP9Ew"></script> --}}
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmWwiQKyJhiwyFrW6DSWR-nrlbUFcguDs"></script>
-<script src="{{ url('/js/clustermap.js') }}"></script>
-
-<!-- {{-- datatable --}}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap5.min.css">
-<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js"></script>
-{{-- end datatable --}} -->
-
-{{-- flatpicker --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.11/dist/plugins/monthSelect/index.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.11/dist/plugins/monthSelect/style.css">
-{{-- end flatpicker --}}
-
-{{-- chart --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" ></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css"/>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-{{-- end chart --}}
-
-{{-- better dropdown --}}
-<!-- <script src="{{ asset('js/jquery.betterdropdown.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('css/jquery.betterdropdown.css') }}"> -->
-{{-- end better dropdown --}}
-
-<style>
-    .week-range{
-        margin-top: 5px;
-        font-size: .7rem !important;
-        color: #242424;
-        font-weight: normal;
-    }
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 

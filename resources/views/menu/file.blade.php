@@ -1,5 +1,5 @@
 @php
-$title_web='Kirim Pesan WA'
+$title_web='Kirim File WA'
 @endphp
 @extends('master.master')
 
@@ -28,7 +28,7 @@ $title_web='Kirim Pesan WA'
             </li> -->
 
                 <!-- <form action="{{ url('/sent_wa') }}" method="POST" id="my-form"> -->
-                <form id="fileUploadForm1" action="{{ url('/sent_wa') }}" method="POST">
+                <form id="fileUploadForm1" action="{{ url('/sent_file') }}" method="POST">
                      @csrf
                      <div>
             
@@ -53,51 +53,17 @@ $title_web='Kirim Pesan WA'
                                 @endforeach
                             </select> 
                         <br>
-                        <!-- <label> 
-                                <input type="radio" name="tipe" id="radio1" 
-                                       value="1"> Daftar Kontak</label>
-                            <label>
-                                <input type="radio" name="tipe" 
-                                       value="2"> Masukkan Nomor</label>
-                            <label>
-                        </div>
-
-                        <div class="1 selectt">
-                          <select name="no_hp1" class="select2 form-control" required>
-                                <option value="" >Pilih Kontak</option>
-                            </select> 
-                        </div>
-                        <div class="2 selectt">
-                            <input type="text" name="no_hp2" class="form-control" name="">
-                        </div>
-
-                          <script type="text/javascript">
-                            $(document).ready(function() {
-                                document.getElementById("radio1").checked = true;
-                                $(".2").hide();
-                                $('input[type="radio"]').click(function() {
-                                    var inputValue = $(this).attr("value");
-                                    var targetBox = $("." + inputValue);
-                                    $(".selectt").not(targetBox).hide();
-                                    $(targetBox).show();
-                                    // alert("Radio button " + inputValue + " is selected");
-                                });
-                            });
-                        </script> -->
-
-                        
                         @error('data')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="exampleInputEmail1">Nomor</label>
-                        <input type="text" name="no_hp" class="form-control" id="exampleInputEmail1" placeholder="Nomor" autocomplete="off">
-                    </div> -->
                     <div class="form-group">
                         <label for="exampleInputEmail1">Pesan</label>
-                        <!-- <input type="text" name="pesan" class="form-control" id="exampleInputEmail1" placeholder="Pesan" autocomplete="off"> -->
-                        <textarea id="pesan" name="pesan" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        <textarea id="pesan" name="pesan" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Url file</label>
+                        <textarea id="file" name="file" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
                         <div class="progress">
@@ -196,6 +162,7 @@ $title_web='Kirim Pesan WA'
                     complete: function (xhr) {
                         // var percentage = percentComplete;
                         document.getElementById("pesan").value = null;
+                        document.getElementById("file").value = null;
                         $('.progress .progress-bar').css("width",'100%')
                         $('.alert').removeClass('alert-success');
                         $('.alert').removeClass('alert-danger');

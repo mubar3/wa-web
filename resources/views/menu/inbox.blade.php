@@ -8,7 +8,6 @@ $title_web='History WA'
 
 @section('konten')
 
-<link rel="stylesheet" href="{{ asset('/css/chat.css') }}">
 {{-- start navigasi --}}
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css"> -->
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"></script> -->
@@ -34,14 +33,15 @@ $title_web='History WA'
             <div class="table-responsive">
                 <div class="card-body">
                         <label>Filter :</label>
-                        <form action="{{ url('/download_excel') }}" method="POST" id="my-form"> @csrf
+                        <form action="{{ url('/download_excelinbox') }}" method="POST" id="my-form"> @csrf
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="" style="color:black">Jenis</span>
                                 <select name="jenis" id="jenis" class="form-control">
                                     <option value="" >All</option>
-                                    <option value="message" >Message</option>
-                                    <option value="file" >File</option>
+                                    @foreach($data_jenis as $data)    
+                                    <option value="{{$data->jenis}}" >{{$data->jenis}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="input-group-prepend">
@@ -89,11 +89,12 @@ $title_web='History WA'
                             <thead>
                                 <tr>
                                     <th class="text-center">API</th>
-                                    <th class="text-center">Penerima</th>
+                                    <th class="text-center">Pengirim</th>
+                                    <th class="text-center">Nama</th>
                                     <th class="text-center">Pesan</th>
                                     <th class="text-center">File</th>
+                                    <th class="text-center">Koordinat</th>
                                     <th class="text-center">Waktu</th>
-                                    <th class="text-center">Status Kirim</th>
                                 </tr>
                             </thead>
                             <!--   <tbody>
@@ -103,47 +104,24 @@ $title_web='History WA'
 
                 </div>
 
-                {{-- <a class="btn btn-primary" href="javascript:;" data-toggle="modal" data-target="#formApi" style="margin-bottom:30px;">
-                    Chat
-                </a> --}}
-            <div id="formApi" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Chat</h4>
-                            <button type="button" class="close" data-dismiss="modal">×</button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="chat">
-                                <div class="container darker">
-                                  <p>Hey! I'm fine. Thanks for asking!</p>
-                                  <span class="time-left">11:01</span>
-                                  <span class="time-left">&nbsp;|&nbsp;</span>
-                                  <span class="time-left">read</span>
-                                </div>
-                                
-                                <div class="container">
-                                  <p>Sweet! So, what do you wanna do today?</p>
-                                  <span class="time-right">11:02</span>
-                                </div>
-                                
-                                <div class="container darker">
-                                  <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
-                                  <span class="time-left">11:05</span>
-                                  <span class="time-left">&nbsp;|&nbsp;</span>
-                                  <span class="time-left">sending</span>
-                                </div>
-                            </div>
-                            
-                            {{ Form::text('nama', null, ['class' => 'form-control']) }}
-                            <button type="button" class="btn btn-success btn-sm btn-block" onclick="send()">Send</button>
-                        </div>
-                        <div class="modal-footer">
-                            {{-- <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> --}}
-                        </div>
-                    </div>
+                <div id="formApi" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Form API</h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">                    
+                <div class="form-group col-xs-12 col-lg-12">
+                    <label class="control-label">Url</label>
+                    {{ Form::text('url', null, ['class' => 'form-control']) }}
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submit()">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
@@ -195,7 +173,7 @@ $title_web='History WA'
         // var hasil='';
 
         if(search == 0){
-            urls="{{ url('/data_history') }}";
+            urls="{{ url('/data_historyinbox') }}";
             idCek = 0;
             // urls=urls+'/'+$('[name=search]').val();
 
@@ -203,14 +181,15 @@ $title_web='History WA'
             datas={};   
             // console.log(url);
         }else{
-            urls="{{ url('/search_history') }}";
+            urls="{{ url('/search_historyinbox') }}";
             types='post';
             datas={
                 jenis : $('[name=jenis]').val(),
                 api : $('[name=api]').val(),
                 tipe : $('[name=tipe]').val(),
                 tanggal_awal : $('[name=tanggal_awal]').val(),
-                tanggal_akhir : $('[name=tanggal_akhir]').val()
+                tanggal_akhir : $('[name=tanggal_akhir]').val(),
+                _token: "{{ csrf_token() }}",
             };
         }
 
@@ -220,11 +199,8 @@ $title_web='History WA'
             url : urls,
             data : datas,
             success : function(data){  
-                    // $('tbody').html('');  
-                    // result='';
                     myTable.clear().draw(); 
                     $(data).each(function(x,y){
-                    //     // result=[];
                         var status='';
                         if(y.status_kirim==1){status='<center><i class="fa-solid fa-check"></i></center>'}
                         else{status='<center><i class="fa-solid fa-xmark"></i></center>'}
@@ -237,26 +213,25 @@ $title_web='History WA'
                         var pengirim=y.telpon;
                         if (y.nama != null) {pengirim=y.nama;}
                             else{pengirim=y.telpon;}
-                    //     // result = 
-                    //     // '<tr>'
-                    //     //     + '<td>'+y.api+'</td>'
-                    //     //     + '<td>'+pengirim+'</td>'
-                    //     //     + '<td>'+y.pesan+'</td>'
-                    //     //     + '<td>'+time+', '+date+'</td>'
-                    //     //     + '<td>'+status+'</td>'
-                    //     // + '</tr>';
-
-                    //     // $('tbody').append(result);
+                        
                         result.push(y.api);
                         result.push(pengirim);
+                        result.push(y.nama_inbox);
                         result.push(y.pesan);
-                        result.push(y.file);
-                        result.push(time+', '+date);
-                        result.push(status);
+                        if(y.file != null){
+                            result.push('<a target="_blank" href="'+y.file+'">'+y.file+'</a>');
+                        }else{
+                            result.push(y.file);
+                        }
 
-                        // result.push(y.api,pengirim,y.pesan,time+', '+date,status);
+                        if(y.koordinat != null){
+                            result.push('<a target="_blank" href="'+y.koordinat+'">'+y.koordinat+'</a>');
+                        }else{
+                            result.push(y.koordinat);
+                        }
+                        result.push(time+', '+date);
+
                         myTable.row.add(result).draw();
-                        // console.log(result);
                         result.length = 0;
                     }); 
                     $('#loading').hide();

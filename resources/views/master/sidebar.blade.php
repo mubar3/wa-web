@@ -26,6 +26,12 @@
           </a>
         </li>
         <li class="nav-item">
+          <a href="{{ route('file') }}" class="nav-link">
+            <i class="link-icon" data-feather="send"></i>
+            <span class="link-title">Sender file</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="{{ route('bulk') }}" class="nav-link">
             <i class="link-icon" data-feather="cast"></i>
             <span class="link-title">Bulk</span>
@@ -38,6 +44,12 @@
           </a>
       </li>
         <li class="nav-item">
+          <a href="{{ route('tipe') }}" class="nav-link">
+            <i class="link-icon" data-feather="compass"></i>
+            <span class="link-title">Tipe</span>
+          </a>
+      </li>
+        <li class="nav-item">
           <a href="{{ route('api_wa') }}" class="nav-link">
             <i class="link-icon" data-feather="codesandbox"></i>
             <span class="link-title">API WA</span>
@@ -45,10 +57,16 @@
       </li>
         <li class="nav-item">
           <a href="{{ route('history') }}" class="nav-link">
-            <i class="link-icon" data-feather="clock"></i>
-            <span class="link-title">History WA</span>
+            <i class="link-icon" data-feather="message-square"></i>
+            <span class="link-title">Outbox WA</span>
           </a>
       </li>
+      <li class="nav-item">
+        <a href="{{ route('inbox') }}" class="nav-link">
+          <i class="link-icon" data-feather="message-square"></i>
+          <span class="link-title">Inbox WA</span>
+        </a>
+    </li>
 
         @if (hakAksesMenu('itinerary','read') || hakAksesMenu('visit','read') || hakAksesMenu('sesi','read') || hakAksesMenu('monitoring','read'))
             <li class="nav-item nav-category">Activity</li>

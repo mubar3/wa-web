@@ -51,6 +51,19 @@
                         <label for="exampleInputEmail1">File Excel (csv,xls,xlsx)</label>
                         <input id="file_excel" type="file" name="excel" class="form-control" >
                         <input type="hidden" name="user" value="{{ Auth::user()->id }}" class="form-control" >
+                        <br>
+                        <label for="exampleInputEmail1">Tipe</label>
+                        <select name="tipe" class="select4 form-control" required>
+                                <option value="" >Pilih tipe</option>
+                                @foreach($tipe_send as $data)
+                                    @if(in_array($data->id,$tipe_send_umum))   
+                                        <option value="{{$data->id}}" selected>{{$data->nama}}</option>
+                                    @else
+                                        <option value="{{$data->id}}" >{{$data->nama}}</option>
+                                    @endif
+                                @endforeach
+                            </select> 
+                        <br>
                     </div>
                     <div class="form-group">
                         <div class="progress">
@@ -130,6 +143,8 @@
     var intervalId = null;
     var varCounter = 0;
     var varName = function(){
+        // $('.alert').removeClass('alert-success');
+        // $('.alert').removeClass('alert-danger');
          if(varCounter == 0) {
             $.ajax({
                 url: '{{ url('/sent_wa_cek') }}',
@@ -155,7 +170,7 @@
                                 $('.progress .progress-bar').css("width", data+'%', function() {
                                   return $(this).attr("aria-valuenow", data) + "%";
                                 })  
-                                $('.alert').addClass('alert-success').html("Berhasil");
+                                $('.alert').addClass('alert-success').html(xhr.responseJSON.message);
                                 setTimeout(() => {
                                 $('.progress .progress-bar').css("width","0%");
                                 }, 1000);
@@ -213,6 +228,8 @@
         $(function () {
             $(document).ready(function () {
                 $('#fileUploadForm').ajaxForm({
+                    // $('.alert').removeClass('alert-success');
+                    // $('.alert').removeClass('alert-danger');
                     beforeSend: function () {
                         var percentage = '0';
                         document.getElementById("send").disabled = true;
@@ -228,7 +245,7 @@
                     complete: function (xhr) {
                         var hasil=xhr.responseJSON.status;
                         if(hasil=='false'){
-                        $('.alert').addClass('alert-danger').html("Gagal");
+                        $('.alert').addClass('alert-danger').html(xhr.responseJSON.message);
 
                         }
                         varCounter = 1;
