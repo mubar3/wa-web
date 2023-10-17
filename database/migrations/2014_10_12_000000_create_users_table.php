@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
             'nama' => 'Admin',
             'email' => 'Admin@admin.com',
             'password' => '$2y$10$RaKn2MpyUsUeqhp.uzPVR.jzLMf2XS9bpOzCIrtD1gspWUal.BwwK',
-            'foto' => 'MWJhcm9r.jpg',
+            'foto' => 'user.png',
             'status' => 'y',
             'created_at' => Carbon::now()
         )
