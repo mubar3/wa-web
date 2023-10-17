@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-md-12" style="text-align: center; color:white !important">
                             <br>
-                            <small >Copyright &copy; @php echo date('Y') @endphp PT Geo Given Visi Mandiri - {{ $page_title }}</small>
+                            <small >Copyright &copy; @php echo date('Y') @endphp {{ $page_title }}</small>
                         </div>
                     </div>
 				</div>
