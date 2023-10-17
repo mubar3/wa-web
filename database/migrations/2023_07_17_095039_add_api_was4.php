@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWasTable extends Migration
+class AddApiWas4 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateWasTable extends Migration
      */
     public function up()
     {
-        Schema::create('was', function (Blueprint $table) {
-            $table->id();
-            $table->string('telpon');
-            $table->longText('pesan')->nullable();
-            $table->string('api');
-            $table->integer('status_kirim');
-            $table->timestamps();
+        Schema::table('api_was', function (Blueprint $table) {
+            $table->enum('jenis',['single','multiple'])->after('url')->default('single');
         });
+        //
     }
 
     /**
@@ -30,6 +26,9 @@ class CreateWasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('was');
+        Schema::table('api_was', function (Blueprint $table) {
+            $table->dropColumn('jenis');
+        });
+        //
     }
 }

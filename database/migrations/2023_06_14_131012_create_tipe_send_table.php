@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWasTable extends Migration
+class CreateTipeSendTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateWasTable extends Migration
      */
     public function up()
     {
-        Schema::create('was', function (Blueprint $table) {
+        Schema::create('tipe_send', function (Blueprint $table) {
             $table->id();
-            $table->string('telpon');
-            $table->longText('pesan')->nullable();
-            $table->string('api');
-            $table->integer('status_kirim');
+            $table->string('nama');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateWasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('was');
+        Schema::dropIfExists('tipe_send');
     }
 }

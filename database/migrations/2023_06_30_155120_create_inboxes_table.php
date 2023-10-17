@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWasTable extends Migration
+class CreateInboxesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,16 @@ class CreateWasTable extends Migration
      */
     public function up()
     {
-        Schema::create('was', function (Blueprint $table) {
+        Schema::create('inboxes', function (Blueprint $table) {
             $table->id();
-            $table->string('telpon');
-            $table->longText('pesan')->nullable();
+            $table->string('id_wa');
             $table->string('api');
-            $table->integer('status_kirim');
+            $table->string('telpon');
+            $table->string('nama')->nullable();
+            $table->longText('pesan')->nullable();
+            $table->string('file')->nullable();
+            $table->string('koordinat')->nullable();
+            $table->string('jenis');
             $table->timestamps();
         });
     }
@@ -30,6 +34,6 @@ class CreateWasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('was');
+        Schema::dropIfExists('inboxes');
     }
 }

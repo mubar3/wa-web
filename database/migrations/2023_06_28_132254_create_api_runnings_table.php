@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWasTable extends Migration
+class CreateApiRunningsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateWasTable extends Migration
      */
     public function up()
     {
-        Schema::create('was', function (Blueprint $table) {
+        Schema::create('api_runnings', function (Blueprint $table) {
             $table->id();
-            $table->string('telpon');
-            $table->longText('pesan')->nullable();
-            $table->string('api');
-            $table->integer('status_kirim');
+            $table->foreignId('api_id')->constrained('api_was')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ class CreateWasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('was');
+        Schema::dropIfExists('api_runnings');
     }
 }
