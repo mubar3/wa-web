@@ -10,6 +10,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ApiWaController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\RolesItemController;
+use App\Http\Controllers\TipeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,7 @@ Route::post('/login', [LoginController::class, 'login']);
 
 // wa
 Route::post('/sent_wa', [WaController::class, 'sent_wa']);
+Route::post('/sent_file', [WaController::class, 'sent_file']);
 Route::post('/sent_wa_excel', [WaController::class, 'sent_wa_excel']);
 Route::get('/sent_wa_cek', [WaController::class, 'sent_wa_cek']);
 
@@ -38,6 +40,14 @@ Route::get('/delete_contact/{id}', [ContactController::class, 'delete_contact'])
 Route::get('/edit_contact/{id}', [ContactController::class, 'edit_contact']);
 Route::post('/edit_aksi_contact', [ContactController::class, 'update_contact']);
 Route::post('/save_contact', [ContactController::class, 'save_contact'])->name('save_contact');
+
+// tipe
+Route::get('/data_tipe', [TipeController::class, 'data_tipe_all']);
+Route::get('/data_tipe/{id}', [TipeController::class, 'data_tipe']);
+Route::get('/delete_tipe/{id}', [TipeController::class, 'delete_tipe']);
+Route::get('/edit_tipe/{id}', [TipeController::class, 'edit_tipe']);
+Route::post('/edit_aksi_tipe', [TipeController::class, 'update_tipe']);
+Route::post('/save_tipe', [TipeController::class, 'save_tipe'])->name('save_tipe');
 
 // Route::get('/cek_random_api', [WaController::class, 'random_api'])->name('random_api');
 
@@ -57,6 +67,11 @@ Route::get('/data_history/{id}', [HistoryController::class, 'data_history']);
 Route::post('/download_excel', [HistoryController::class, 'download_excel']);
 Route::post('/search_history', [HistoryController::class, 'search_history']);
 
+// inbox
+Route::get('/data_historyinbox', [HistoryController::class, 'data_historyinbox_all']);
+Route::get('/data_history/{id}', [HistoryController::class, 'data_history']);
+Route::post('/download_excelinbox', [HistoryController::class, 'download_excelinbox']);
+Route::post('/search_historyinbox', [HistoryController::class, 'search_historyinbox']);
 
 
 
@@ -64,10 +79,13 @@ Route::middleware(['auth'])->group(function () {
     // home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/sender', [HomeController::class, 'sender'])->name('sender');
+    Route::get('/file', [HomeController::class, 'file'])->name('file');
     Route::get('/bulk', [HomeController::class, 'bulk'])->name('bulk');
     Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+    Route::get('/tipe', [HomeController::class, 'tipe'])->name('tipe');
     Route::get('/api_wa', [HomeController::class, 'api_wa'])->name('api_wa');
     Route::get('/history', [HomeController::class, 'history'])->name('history');
+    Route::get('/inbox', [HomeController::class, 'inbox'])->name('inbox');
     Route::get('/getMaps', [HomeController::class, 'getMaps']);
     Route::get('/ajaxGetDivisi/{cluster}', [HomeController::class, 'getDivisi']);
     Route::post('/dashboard', [HomeController::class, 'dashboard']);
